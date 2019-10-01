@@ -1,4 +1,4 @@
-package br.com.cash;
+package br.com.cash.api;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

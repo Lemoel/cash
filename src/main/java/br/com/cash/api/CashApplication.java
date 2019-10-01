@@ -1,4 +1,4 @@
-package br.com.cash;
+package br.com.cash.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
