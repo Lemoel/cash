@@ -3,11 +3,14 @@ package br.com.cash.api.resource;
 import br.com.cash.api.event.RecursoCriadoEvent;
 import br.com.cash.api.model.Pessoa;
 import br.com.cash.api.repository.PessoaRepository;
+import br.com.cash.api.service.PessoaService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +31,9 @@ public class PessoaResource {
     PessoaRepository repository;
 
     @Autowired
+    PessoaService pessoaService;
+
+    @Autowired
     ApplicationEventPublisher publisher;
 
     @GetMapping
@@ -45,11 +51,23 @@ public class PessoaResource {
 
     @GetMapping("/{codigo}")
     public ResponseEntity<Pessoa> buscarPeloCodigo(@PathVariable Long codigo) {
-        Optional<Pessoa> pessoa = repository.findById(codigo);
+        val pessoa = pessoaService.findById(codigo);
         if (pessoa.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(pessoa.get());
+    }
+
+    @DeleteMapping("/{codigo}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long codigo) {
+        pessoaService.deleteById(codigo);
+    }
+
+    @PutMapping("/{codigo}")
+    public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo, @Valid @RequestBody Pessoa pessoa) {
+        val pessoaSalva = pessoaService.atualizar(codigo,pessoa);
+        return ResponseEntity.ok(pessoaSalva);
     }
 
 }
