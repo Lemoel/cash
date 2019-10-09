@@ -21,9 +21,8 @@ public class PessoaService {
             BeanUtils.copyProperties(pessoa, pessoaSalva.get(), "codigo");
             repository.save(pessoaSalva.get());
             return pessoaSalva.get();
-        } else {
-            throw new EmptyResultDataAccessException(1);
         }
+        throw new EmptyResultDataAccessException(1);
     }
 
     public void deleteById(Long codigo) {
@@ -31,6 +30,6 @@ public class PessoaService {
     }
 
     public Optional<Pessoa> findById(Long codigo) {
-        return  repository.findById(codigo);
+        return repository.findById(codigo);
     }
 }

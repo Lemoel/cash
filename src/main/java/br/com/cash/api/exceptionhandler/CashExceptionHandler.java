@@ -17,7 +17,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -48,7 +47,7 @@ public class CashExceptionHandler extends ResponseEntityExceptionHandler {
     private List<Erro> criarListaDeErros(BindingResult bindingResult) {
         val erros = new ArrayList<Erro>();
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
-            val mensagemUsuario = messageSource.getMessage(fieldError,LocaleContextHolder.getLocale());
+            val mensagemUsuario = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
             val mensagemDesenvolvedor = fieldError.toString();
             erros.add(new Erro(mensagemUsuario, mensagemDesenvolvedor));
         }
@@ -69,13 +68,13 @@ public class CashExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({EmptyResultDataAccessException.class})
-    public ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex, WebRequest request){
+    public ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex, WebRequest request) {
 
         val mensagemUsuario = messageSource.getMessage("recurso.nao-encontrado", null, LocaleContextHolder.getLocale());
         val mensagemDesenvolvedor = ex.toString();
         val erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 
-        return handleExceptionInternal(ex,erros,new HttpHeaders(),HttpStatus.NOT_FOUND,request);
+        return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
 }
