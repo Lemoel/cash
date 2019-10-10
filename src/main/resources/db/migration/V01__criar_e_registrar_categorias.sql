@@ -7,4 +7,7 @@ INSERT INTO categoria (NOME) VALUES ('Lazer');
 INSERT INTO categoria (NOME) VALUES ('Alimentação');
 INSERT INTO categoria (NOME) VALUES ('Supermercado');
 INSERT INTO categoria (NOME) VALUES ('Farmácia');
+INSERT INTO categoria (NOME) VALUES ('Vestuário');
+INSERT INTO categoria (NOME) VALUES ('Manutenção Carro');
+INSERT INTO categoria (NOME) VALUES ('Moradia');
 INSERT INTO categoria (NOME) VALUES ('Outros');

@@ -16,13 +16,20 @@ public class PessoaService {
     PessoaRepository repository;
 
     public Pessoa atualizar(Long codigo, Pessoa pessoa) {
+
+        var pessoaSalva = getPessoaPeloCodigo(codigo);
+        BeanUtils.copyProperties(pessoa, pessoaSalva, "codigo");
+        repository.save(pessoaSalva);
+        return pessoaSalva;
+
+    }
+
+    public Pessoa getPessoaPeloCodigo(Long codigo) {
         Optional<Pessoa> pessoaSalva = repository.findById(codigo);
-        if (pessoaSalva.isPresent()) {
-            BeanUtils.copyProperties(pessoa, pessoaSalva.get(), "codigo");
-            repository.save(pessoaSalva.get());
-            return pessoaSalva.get();
+        if (pessoaSalva.isEmpty()) {
+            throw new EmptyResultDataAccessException(1);
         }
-        throw new EmptyResultDataAccessException(1);
+        return pessoaSalva.get();
     }
 
     public void deleteById(Long codigo) {
@@ -31,5 +38,11 @@ public class PessoaService {
 
     public Optional<Pessoa> findById(Long codigo) {
         return repository.findById(codigo);
+    }
+
+    public void atualizarPropriedadeAtivo(Long codigo, Boolean ativo) {
+        var pessoaSalva = getPessoaPeloCodigo(codigo);
+        pessoaSalva.setAtivo(ativo);
+        repository.save(pessoaSalva);
     }
 }

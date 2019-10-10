@@ -1,5 +1,6 @@
 package br.com.cash.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -25,5 +26,11 @@ public class Pessoa {
 
     @Embedded
     Endereco endereco;
+
+    @JsonIgnore
+    @Transient
+    public boolean isInativo(){
+        return !this.ativo;
+    }
 
 }
