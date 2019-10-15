@@ -2,6 +2,11 @@ package br.com.cash.api.service;
 
 import br.com.cash.api.model.Lancamento;
 import br.com.cash.api.repository.LancamentoRepository;
+import br.com.cash.api.repository.PessoaRepository;
+import br.com.cash.api.repository.filter.LancamentoFilter;
+import br.com.cash.api.service.exception.PessoaInexistenteOuInativaException;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,23 +17,24 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class LancamentoService {
 
     @Autowired
-    LancamentoRepository repository;
+    LancamentoRepository lancamentoRepository;
 
     @Autowired
-    PessoaService pessoaService;
+    PessoaRepository pessoaRepository;
 
     public Lancamento atualizar(Long codigo, Lancamento lancamento) {
         var lancamentoSalvo = getLancamentoSalvo(codigo);
         BeanUtils.copyProperties(lancamento, lancamentoSalvo, "codigo");
-        repository.save(lancamentoSalvo);
+        lancamentoRepository.save(lancamentoSalvo);
         return lancamentoSalvo;
     }
 
     private Lancamento getLancamentoSalvo(Long codigo) {
-        Optional<Lancamento> lancamentoSalvo = repository.findById(codigo);
+        Optional<Lancamento> lancamentoSalvo = lancamentoRepository.findById(codigo);
         if (lancamentoSalvo.isEmpty()) {
             throw new EmptyResultDataAccessException(1);
         }
@@ -36,24 +42,28 @@ public class LancamentoService {
     }
 
     public void deleteById(Long codigo) {
-        repository.deleteById(codigo);
+        lancamentoRepository.deleteById(codigo);
     }
 
     public Optional<Lancamento> findById(Long codigo) {
-        return repository.findById(codigo);
+        return lancamentoRepository.findById(codigo);
     }
 
     public List<Lancamento> findAll() {
-        return repository.findAll();
+        return lancamentoRepository.findAll();
     }
 
-    public Lancamento save(Lancamento lancamento) {
-        val pessoaPeloCodigo = pessoaService.findById(lancamento.getPessoa().getCodigo());
+    public List<Lancamento> filtrar(LancamentoFilter lancamentoFilter) {
+        return lancamentoRepository.filtrar(lancamentoFilter);
+    }
+
+    public Lancamento salvar(Lancamento lancamento) {
+        val pessoaPeloCodigo = pessoaRepository.findById(lancamento.getPessoa().getCodigo());
         if(pessoaPeloCodigo.isPresent()) {
-            if(pessoaPeloCodigo.get().isInativo()) {
-                return repository.save(lancamento);
+            if(pessoaPeloCodigo.get().isAtivo()) {
+                return lancamentoRepository.save(lancamento);
             }
         }
-        return null;
+        throw new PessoaInexistenteOuInativaException();
     }
 }

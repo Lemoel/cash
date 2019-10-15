@@ -2,6 +2,8 @@ package br.com.cash.api.service;
 
 import br.com.cash.api.model.Pessoa;
 import br.com.cash.api.repository.PessoaRepository;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PessoaService {
 
     @Autowired

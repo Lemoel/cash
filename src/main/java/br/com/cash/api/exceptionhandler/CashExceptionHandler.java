@@ -27,10 +27,11 @@ import java.util.Arrays;
 import java.util.List;
 
 @ControllerAdvice
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CashExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Autowired
-    private MessageSource messageSource;
+    MessageSource messageSource;
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {

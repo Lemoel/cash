@@ -31,6 +31,7 @@ public class Lancamento {
     @Column(name = "DATA_PAGAMENTO")
     LocalDate dataPagamento;
 
+    @NotNull
     BigDecimal valor;
 
     String observacao;
