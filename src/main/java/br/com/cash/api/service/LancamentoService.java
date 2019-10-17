@@ -11,6 +11,8 @@ import lombok.val;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,8 +55,8 @@ public class LancamentoService {
         return lancamentoRepository.findAll();
     }
 
-    public List<Lancamento> filtrar(LancamentoFilter lancamentoFilter) {
-        return lancamentoRepository.filtrar(lancamentoFilter);
+    public Page<Lancamento> filtrar(LancamentoFilter lancamentoFilter, Pageable pageable) {
+        return lancamentoRepository.filtrar(lancamentoFilter,pageable);
     }
 
     public Lancamento salvar(Lancamento lancamento) {
