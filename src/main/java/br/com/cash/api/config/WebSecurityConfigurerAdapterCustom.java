@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 @EnableWebSecurity
@@ -18,22 +17,28 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @Configuration
 public class WebSecurityConfigurerAdapterCustom extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
 
-  /*  @Autowired
+/*    @Autowired
     private UserDetailsService customUserDetailsService;*/
 
+    /**
+     * Autenticação dos usuários
+     */
     @Autowired
     public void globalUserDetails(final AuthenticationManagerBuilder auth) throws Exception {
-        // @formatter:off
-        /* auth.parentAuthenticationManager(authenticationManagerBean())
-        .userDetailsService(customUserDetailsService);*/
+
+/*        auth.parentAuthenticationManager(authenticationManagerBean())
+                .userDetailsService(customUserDetailsService);*/
 
         auth.inMemoryAuthentication()
-                .withUser( "angular")
-                .password(passwordEncoder.encode("@ngul@r0"))
-                .roles("USER");
+                .withUser("angular")
+                .password("@ngul@r0")
+                .roles("ROLE");
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/categorias");
     }
 
     @Override
@@ -42,6 +47,9 @@ public class WebSecurityConfigurerAdapterCustom extends WebSecurityConfigurerAda
         return super.authenticationManagerBean();
     }
 
+    /**
+     * Autorização das requisições
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
@@ -51,9 +59,5 @@ public class WebSecurityConfigurerAdapterCustom extends WebSecurityConfigurerAda
                 .and().csrf().disable();
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/categorias");
-    }
 
 }
